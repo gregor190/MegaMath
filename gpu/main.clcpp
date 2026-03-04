@@ -1,0 +1,24 @@
+// simple scalar helpers (not used directly from C++)
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+int mul(int a, int b) { return a * b; }
+int divide(int a, int b) { return a / b; }
+int powi(int a, int b) { 
+    int result = 1;
+    for(int i=0; i<b; ++i) result *= a;
+    return result;
+}
+int root(int a, int n) { 
+    // integer n-th root (approx)
+    int x = a;
+    while (x*x > a) x--; 
+    return x;
+}
+
+// kernel that computes a^b per element
+__kernel void powi(__global const int* a,
+                   __global const int* b,
+                   __global int* out) {
+    int i = get_global_id(0);
+    out[i] = powi(a[i], b[i]);
+}
